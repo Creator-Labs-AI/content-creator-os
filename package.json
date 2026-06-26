@@ -29,31 +29,49 @@
     "test:e2e-debug": "npx playwright test --debug"
   },
   "dependencies": {
+    "@next/eslint-plugin-next": "16.2.9",
+    "next": "16.2.9",
+    "npm": "11.17.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.5",
+    "@eslint/js": "10.0.1",
     "@playwright/test": "1.61.1",
     "@swc/jest": "0.2.39",
     "@tailwindcss/postcss": "4.3.1",
+    "@testing-library/dom": "10.4.1",
     "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.2",
+    "@testing-library/user-event": "14.6.1",
+    "@types/jest": "30.0.0",
+    "@types/node": "26.0.1",
+    "@types/react": "19.2.17",
+    "@typescript-eslint/eslint-plugin": "8.62.0",
+    "@typescript-eslint/parser": "8.62.0",
+    "autoprefixer": "10.5.2",
+    "eslint": "10.5.0",
+    "eslint-config-next": "16.2.9",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-prettier": "5.5.6",
     "husky": "9.1.7",
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
-    "next": "16.2.9",
-    "playwright": "1.61.1",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
+    "lint-staged": "17.0.8",
+    "postcss": "8.5.15",
+    "prettier": "3.8.5",
+    "tailwindcss": "4.3.1",
     "tailwindcss-animate": "1.0.7",
-    "typescript-eslint": "8.62.0"
+    "ts-jest": "29.4.11",
+    "ts-node": "10.9.2",
+    "typescript": "6.0.3"
   },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@types/node": "^26",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^10",
-    "eslint-config-next": "16.2.9",
-    "postcss": "^8",
-    "tailwindcss": "^4.3.1",
-    "typescript": "^6"
-  }
+  "overrides": {
+    "picomatch": "4.0.4"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
 }
