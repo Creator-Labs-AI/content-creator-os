@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('allows a user to publish a LinkedIn draft from the page', async ({ page }) => {
-	await page.goto('/');
+	await page.goto('/publish');
 
 	await expect(page.getByRole('heading', { name: /publish to linkedin/i })).toBeVisible();
 	const textarea = page.getByLabel('LinkedIn Post');

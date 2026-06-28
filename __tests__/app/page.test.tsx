@@ -1,43 +1,23 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen } from '@testing-library/react';
 import HomePage from '@/app/page';
 
 describe('Home page', () => {
-	beforeEach(() => {
-		Object.defineProperty(window, 'open', {
-			value: jest.fn(),
-			writable: true,
-		});
-	});
-
-	afterEach(() => {
-		jest.restoreAllMocks();
-	});
-
-	it('enables publish when content is entered and submits the draft', async () => {
+	it('renders the dashboard landing page with the primary CTA', () => {
 		render(<HomePage />);
 
-		const textarea = screen.getByLabelText(/linkedin post/i);
-		const publishButton = screen.getByRole('button', { name: /publish to linkedin/i });
-
-		expect(publishButton).toBeDisabled();
-
-		await userEvent.type(textarea, 'Hello from Content Creator OS');
-
-		expect(screen.getByText(/character count:/i)).toBeInTheDocument();
-		expect(publishButton).toBeEnabled();
-
-		await userEvent.click(publishButton);
-
-		await waitFor(() => {
-			expect(window.open).toHaveBeenCalledWith(
-				expect.stringContaining('linkedin.com/feed'),
-				'_blank',
-				'noopener,noreferrer',
-			);
-		});
-		await waitFor(() => {
-			expect(screen.getByText(/done/i)).toBeInTheDocument();
-		});
+		expect(
+			screen.getByRole('heading', { name: /content creator os/i }),
+		).toBeInTheDocument();
+		expect(screen.getByText(/version/i)).toBeInTheDocument();
+		expect(screen.getByText(/v0\.1\.0-alpha/i)).toBeInTheDocument();
+		expect(
+			screen.getByText(/good (morning|afternoon|evening|night), prad/i),
+		).toBeInTheDocument();
+		expect(screen.getByRole('link', { name: /\+ new linkedin post/i })).toHaveAttribute(
+			'href',
+			'/publish',
+		);
+		expect(screen.getByText(/total published/i)).toBeInTheDocument();
+		expect(screen.getByText('3')).toBeInTheDocument();
 	});
 });
