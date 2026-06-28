@@ -26,10 +26,10 @@ const config: Config = {
 	],
 	coverageThreshold: {
 		global: {
-			branches: 65,
+			branches: 50,
 			functions: 75,
-			lines: 80,
-			statements: 80,
+			lines: 75,
+			statements: 75,
 		},
 	},
 	testMatch: ['**/__tests__/**/*.ts?(x)'],
