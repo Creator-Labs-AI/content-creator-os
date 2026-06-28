@@ -7,11 +7,11 @@ import StatsCard from '@/components/dashboard/StatsCard';
 import WelcomeCard from '@/components/dashboard/WelcomeCard';
 
 const dashboardData = {
-	totalPublished: 3,
+	linkedinSessions: 3,
 	recentActivity: [
-		{ id: 1, status: 'Published', date: 'Today' },
-		{ id: 2, status: 'Published', date: 'Yesterday' },
-		{ id: 3, status: 'Published', date: '2 days ago' },
+		{ id: 1, status: 'Sent to LinkedIn', date: 'Today' },
+		{ id: 2, status: 'Sent to LinkedIn', date: 'Yesterday' },
+		{ id: 3, status: 'Sent to LinkedIn', date: '2 days ago' },
 	],
 };
 
@@ -35,7 +35,7 @@ export default function HomePage() {
 
 					<div className="space-y-6">
 						<RecentActivityCard items={dashboardData.recentActivity} />
-						<StatsCard title="Total Published" value={dashboardData.totalPublished} />
+						<StatsCard title="LinkedIn Sessions" value={dashboardData.linkedinSessions} />
 					</div>
 				</div>
 			</div>

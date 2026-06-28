@@ -17,7 +17,7 @@ describe('Home page', () => {
 			'href',
 			'/publish',
 		);
-		expect(screen.getByText(/total published/i)).toBeInTheDocument();
+		expect(screen.getByText(/linkedin sessions/i)).toBeInTheDocument();
 		expect(screen.getByText('3')).toBeInTheDocument();
 	});
 });

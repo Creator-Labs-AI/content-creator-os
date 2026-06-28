@@ -19,7 +19,7 @@ const config: Config = {
 		],
 	},
 	collectCoverage: true,
-	collectCoverageFrom: ['<rootDir>/src/app/**'],
+	collectCoverageFrom: ['<rootDir>/src/**/*.{ts,tsx}'],
 	coveragePathIgnorePatterns: [
 		'<rootDir>/src/app/layout.tsx',
 		'<rootDir>/src/node_modules/',
