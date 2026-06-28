@@ -46,7 +46,7 @@ export default function HomePage() {
 			setFeedback('LinkedIn draft opened. Please review and click Post.');
 			setTimeout(() => {
 				setStatus(statusMessages.done);
-			}, 250);
+			}, 6500);
 		} catch (error) {
 			setStatus(statusMessages.error);
 			setFeedback(
