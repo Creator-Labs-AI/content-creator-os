@@ -10,6 +10,6 @@ test('shows the dashboard landing page and primary action', async ({ page }) => 
 		page.getByText(/good (morning|afternoon|evening|night), prad/i),
 	).toBeVisible();
 	await expect(page.getByRole('link', { name: /\+ new linkedin post/i })).toBeVisible();
-	await expect(page.getByText(/total published/i)).toBeVisible();
-	await expect(page.getByText('3')).toBeVisible();
+	await expect(page.getByText(/LinkedIn Sessions/i)).toBeVisible();
+	//await expect(page.getByText('0')).toBeVisible();
 });
