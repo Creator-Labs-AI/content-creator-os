@@ -1,6 +1,20 @@
 import { render, screen } from '@testing-library/react';
 import HomePage from '@/app/page';
 
+beforeAll(() => {
+	// Use Node's built-in globalThis.fetch to populate Jest's environment
+	window.fetch = jest.fn().mockImplementation(() =>
+		Promise.resolve({
+			ok: true,
+			json: () => Promise.resolve({ data: [] }), // Customize this mock data as needed
+		}),
+	);
+});
+
+afterAll(() => {
+	jest.clearAllMocks();
+});
+
 describe('Home page', () => {
 	it('renders the dashboard landing page with the primary CTA', async () => {
 		render(<HomePage />);
