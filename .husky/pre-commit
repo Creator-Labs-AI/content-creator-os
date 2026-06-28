@@ -1,1 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
 npx lint-staged
+
+if npm run test:coverage >/dev/null 2>&1; then
+  echo "Coverage check passed."
+else
+  echo "WARNING: Coverage is below the required 80% threshold. Commit will continue, but CI will fail."
+fi

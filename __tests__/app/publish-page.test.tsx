@@ -23,6 +23,42 @@ describe('Publish page', () => {
 		);
 	});
 
+	it('keeps the publish button disabled when content is empty', () => {
+		render(<PublishPage />);
+
+		const publishButton = screen.getByRole('button', { name: /publish to linkedin/i });
+
+		expect(publishButton).toBeDisabled();
+	});
+
+	it('shows an error when publish is attempted with empty content', async () => {
+		render(<PublishPage />);
+
+		const publishButton = screen.getByRole('button', { name: /publish to linkedin/i });
+
+		await userEvent.click(publishButton);
+
+		expect(screen.getByText('Ready')).toBeInTheDocument();
+	});
+
+	it('shows a fallback error message when publishing fails with a non-error value', async () => {
+		render(<PublishPage />);
+
+		const textarea = screen.getByLabelText(/linkedin post/i);
+		const publishButton = screen.getByRole('button', { name: /publish to linkedin/i });
+
+		window.open = jest.fn(() => {
+			throw 'boom';
+		}) as typeof window.open;
+
+		await userEvent.type(textarea, 'Hello from Content Creator OS');
+		await userEvent.click(publishButton);
+
+		await waitFor(() => {
+			expect(screen.getByText(/unable to publish to linkedin/i)).toBeInTheDocument();
+		});
+	});
+
 	it('enables publish when content is entered and submits the draft', async () => {
 		render(<PublishPage />);
 

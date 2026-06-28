@@ -22,7 +22,7 @@
     "posttest": "npm run format",
     "test:jest": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
+    "test:coverage": "jest --coverage --runInBand",
     "test": "npm run test:jest --",
     "test:e2e": "npx playwright test",
     "test:e2e-ui": "npx playwright test --ui",
