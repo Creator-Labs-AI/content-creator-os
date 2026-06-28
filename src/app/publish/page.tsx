@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 const INITIAL_STATUS = 'Ready';
@@ -61,6 +62,12 @@ export default function PublishPage() {
 		<div className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 lg:px-8">
 			<div className="mx-auto flex max-w-3xl flex-col gap-6 rounded-3xl border border-slate-800 bg-slate-900/80 p-6 shadow-2xl shadow-slate-950/40 sm:p-8 lg:p-10">
 				<div className="space-y-2">
+					<Link
+						href="/"
+						className="inline-flex text-sm font-medium text-cyan-400 transition hover:text-cyan-300"
+					>
+						← Back to Dashboard
+					</Link>
 					<p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-400">
 						Content Creator OS
 					</p>

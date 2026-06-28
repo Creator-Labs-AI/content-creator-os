@@ -14,6 +14,15 @@ describe('Publish page', () => {
 		jest.restoreAllMocks();
 	});
 
+	it('renders a back link to the dashboard', () => {
+		render(<PublishPage />);
+
+		expect(screen.getByRole('link', { name: /back to dashboard/i })).toHaveAttribute(
+			'href',
+			'/',
+		);
+	});
+
 	it('enables publish when content is entered and submits the draft', async () => {
 		render(<PublishPage />);
 
