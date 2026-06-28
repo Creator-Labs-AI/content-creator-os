@@ -1,21 +1,28 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import PrimaryActionCard from '@/components/dashboard/PrimaryActionCard';
 import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
 import StatsCard from '@/components/dashboard/StatsCard';
 import WelcomeCard from '@/components/dashboard/WelcomeCard';
-
-const dashboardData = {
-	linkedinSessions: 3,
-	recentActivity: [
-		{ id: 1, status: 'Sent to LinkedIn', date: 'Today' },
-		{ id: 2, status: 'Sent to LinkedIn', date: 'Yesterday' },
-		{ id: 3, status: 'Sent to LinkedIn', date: '2 days ago' },
-	],
-};
+import type { PublishHistoryEntry } from '@/types/publish-history';
 
 export default function HomePage() {
+	const [recentActivity, setRecentActivity] = useState<PublishHistoryEntry[]>([]);
+
+	useEffect(() => {
+		void fetch('/api/history')
+			.then((res) => (res.ok ? res.json() : Promise.resolve({ history: [] })))
+			.then((history) => {
+				setRecentActivity(history.history ?? []);
+			})
+			.catch(() => {
+				setRecentActivity([]);
+			});
+	}, []);
+
 	return (
 		<div className="min-h-screen bg-slate-950 px-4 py-10 text-slate-100 sm:px-6 lg:px-8">
 			<div className="mx-auto flex max-w-5xl flex-col gap-6">
@@ -34,8 +41,8 @@ export default function HomePage() {
 					</div>
 
 					<div className="space-y-6">
-						<RecentActivityCard items={dashboardData.recentActivity} />
-						<StatsCard title="LinkedIn Sessions" value={dashboardData.linkedinSessions} />
+						<RecentActivityCard items={recentActivity} />
+						<StatsCard title="LinkedIn Sessions" value={recentActivity.length} />
 					</div>
 				</div>
 			</div>

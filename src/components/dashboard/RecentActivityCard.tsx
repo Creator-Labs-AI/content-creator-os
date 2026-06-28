@@ -1,11 +1,7 @@
-type ActivityItem = {
-	id: number;
-	status: string;
-	date: string;
-};
+import type { PublishHistoryEntry } from '@/types/publish-history';
 
 type RecentActivityCardProps = {
-	items: ActivityItem[];
+	items: PublishHistoryEntry[];
 };
 
 export default function RecentActivityCard({ items }: RecentActivityCardProps) {
@@ -15,18 +11,27 @@ export default function RecentActivityCard({ items }: RecentActivityCardProps) {
 				Recent Activity
 			</p>
 			<ul className="mt-4 space-y-3">
-				{items.map((item) => (
-					<li
-						key={item.id}
-						className="flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3"
-					>
-						<span className="flex items-center gap-2 text-sm font-medium text-slate-200">
-							<span className="text-cyan-400">✓</span>
-							{item.status}
-						</span>
-						<span className="text-sm text-slate-400">{item.date}</span>
-					</li>
-				))}
+				{items.map((item) => {
+					const entry = item as PublishHistoryEntry;
+					const status =
+						entry.status ?? (entry.preview ? 'Sent to LinkedIn' : 'LinkedIn Session');
+					const date = entry.date ?? entry.initiatedAt ?? '';
+					const key =
+						typeof entry.id === 'number' ? entry.id : String(entry.id ?? Math.random());
+
+					return (
+						<li
+							key={key}
+							className="flex items-center justify-between gap-3 rounded-2xl border border-slate-800 bg-slate-950/60 px-4 py-3"
+						>
+							<span className="flex items-center gap-2 text-sm font-medium text-slate-200">
+								<span className="text-cyan-400">✓</span>
+								{status}
+							</span>
+							<span className="text-sm text-slate-400">{date}</span>
+						</li>
+					);
+				})}
 			</ul>
 		</section>
 	);

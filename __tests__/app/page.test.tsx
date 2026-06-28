@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import HomePage from '@/app/page';
 
 describe('Home page', () => {
-	it('renders the dashboard landing page with the primary CTA', () => {
+	it('renders the dashboard landing page with the primary CTA', async () => {
 		render(<HomePage />);
 
 		expect(
@@ -18,6 +18,7 @@ describe('Home page', () => {
 			'/publish',
 		);
 		expect(screen.getByText(/linkedin sessions/i)).toBeInTheDocument();
-		expect(screen.getByText('3')).toBeInTheDocument();
+		// default test fixture has empty history
+		await screen.findByText('0');
 	});
 });
