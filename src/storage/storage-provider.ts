@@ -4,6 +4,7 @@ import { BlobStorage } from './blob-storage';
 
 export interface StorageProvider {
 	readHistory(): Promise<PublishHistory>;
+	writeHistory(history: PublishHistory): Promise<void>;
 }
 
 export function createStorageProvider(): StorageProvider {

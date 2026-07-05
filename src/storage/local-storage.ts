@@ -21,6 +21,11 @@ export class LocalStorage implements StorageProvider {
 			return { history: [] };
 		}
 	}
+
+	async writeHistory(history: PublishHistory): Promise<void> {
+		await fs.mkdir(path.dirname(this.filePath), { recursive: true });
+		await fs.writeFile(this.filePath, JSON.stringify(history, null, 2));
+	}
 }
 
 export default LocalStorage;

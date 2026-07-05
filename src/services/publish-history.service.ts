@@ -8,6 +8,33 @@ export class PublishHistoryService {
 		return this.storageProvider.readHistory();
 	}
 
+	async addHistoryEvent(content: string): Promise<void> {
+		const existing = await this.getHistory();
+		const preview = this.buildPreview(content);
+		const initiatedAt = new Date().toISOString();
+		const event = {
+			id: globalThis.crypto.randomUUID(),
+			platform: 'linkedin',
+			status: 'initiated',
+			date: initiatedAt,
+			initiatedAt,
+			preview,
+			characterCount: content.length,
+		};
+
+		await this.storageProvider.writeHistory({
+			history: [...existing.history, event],
+		});
+	}
+
+	private buildPreview(content: string): string {
+		if (content.length <= 100) {
+			return content;
+		}
+
+		return `${content.slice(0, 100)}...`;
+	}
+
 	static async createFromEnv(): Promise<PublishHistoryService> {
 		const { createStorageProvider } = await import('@/storage/storage-provider');
 		const provider = createStorageProvider();

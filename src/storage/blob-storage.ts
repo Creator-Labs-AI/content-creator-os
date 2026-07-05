@@ -28,6 +28,24 @@ export class BlobStorage implements StorageProvider {
 			return { history: [] };
 		}
 	}
+
+	async writeHistory(history: PublishHistory): Promise<void> {
+		if (!this.blobUrl) {
+			throw new Error('Blob storage is not configured.');
+		}
+
+		const res = await fetch(this.blobUrl, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(history),
+		});
+
+		if (!res.ok) {
+			throw new Error(`Unable to write publish history (${res.status}).`);
+		}
+	}
 }
 
 export default BlobStorage;
