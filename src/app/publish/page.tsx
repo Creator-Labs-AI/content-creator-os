@@ -80,9 +80,10 @@ export default function PublishPage() {
 			}
 
 			setStatus(statusMessages.waiting);
-			setFeedback('LinkedIn draft opened. Please review and click Post.');
+			setFeedback('The LinkedIn draft was opened. Please review and click Post.');
 			window.setTimeout(() => {
 				setStatus(statusMessages.done);
+				setFeedback('Ready for next Post.');
 			}, getPublishStatusTransitionTimeoutMs());
 		} catch (error) {
 			setStatus(statusMessages.error);

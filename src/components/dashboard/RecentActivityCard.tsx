@@ -15,7 +15,14 @@ export default function RecentActivityCard({ items }: RecentActivityCardProps) {
 					const entry = item as PublishHistoryEntry;
 					const status =
 						entry.status ?? (entry.preview ? 'Sent to LinkedIn' : 'LinkedIn Session');
-					const date = entry.date ?? entry.initiatedAt ?? '';
+					const rawDate = entry.date ?? entry.initiatedAt ?? '';
+					const date =
+						rawDate && !Number.isNaN(Date.parse(rawDate))
+							? new Date(rawDate).toLocaleString(undefined, {
+									dateStyle: 'medium',
+									timeStyle: 'short',
+								})
+							: rawDate;
 					const key =
 						typeof entry.id === 'number' ? entry.id : String(entry.id ?? Math.random());
 
