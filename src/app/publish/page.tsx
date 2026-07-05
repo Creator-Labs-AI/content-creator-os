@@ -13,6 +13,17 @@ const statusMessages = {
 	done: 'Done',
 	error: 'Error',
 } as const;
+const DEFAULT_STATUS_TRANSITION_TIMEOUT_MS = 60;
+
+export function getPublishStatusTransitionTimeoutMs(): number {
+	const configuredValue = Number(process.env.NEXT_PUBLIC_PUBLISH_STATUS_TIMEOUT_MS);
+
+	if (Number.isFinite(configuredValue) && configuredValue >= 0) {
+		return configuredValue;
+	}
+
+	return DEFAULT_STATUS_TRANSITION_TIMEOUT_MS;
+}
 
 export default function PublishPage() {
 	const [content, setContent] = useState('');
@@ -27,6 +38,9 @@ export default function PublishPage() {
 			setFeedback('Please enter some content first.');
 			return;
 		}
+
+		const popup =
+			typeof window !== 'undefined' ? window.open('about:blank', '_blank') : null;
 
 		setIsSubmitting(true);
 		setStatus(statusMessages.launching);
@@ -54,15 +68,22 @@ export default function PublishPage() {
 			const encodedContent = encodeURIComponent(trimmedContent);
 			const shareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodedContent}`;
 
-			if (typeof window !== 'undefined') {
-				window.open(shareUrl, '_blank', 'noopener,noreferrer');
+			if (typeof window !== 'undefined' && popup) {
+				popup.location.assign(shareUrl);
+				popup.focus();
+			} else if (typeof window !== 'undefined') {
+				const fallbackLink = document.createElement('a');
+				fallbackLink.href = shareUrl;
+				fallbackLink.target = '_blank';
+				fallbackLink.rel = 'noopener,noreferrer';
+				fallbackLink.click();
 			}
 
 			setStatus(statusMessages.waiting);
 			setFeedback('LinkedIn draft opened. Please review and click Post.');
-			setTimeout(() => {
+			window.setTimeout(() => {
 				setStatus(statusMessages.done);
-			}, 6500);
+			}, getPublishStatusTransitionTimeoutMs());
 		} catch (error) {
 			setStatus(statusMessages.error);
 			setFeedback(

@@ -8,6 +8,12 @@ describe('Publish page', () => {
 			value: jest.fn(),
 			writable: true,
 		});
+		(global as typeof globalThis & { fetch: jest.Mock }).fetch = jest
+			.fn()
+			.mockResolvedValue({
+				ok: true,
+				json: async () => ({ success: true }),
+			});
 	});
 
 	afterEach(() => {
@@ -47,9 +53,9 @@ describe('Publish page', () => {
 		const textarea = screen.getByLabelText(/linkedin post/i);
 		const publishButton = screen.getByRole('button', { name: /publish to linkedin/i });
 
-		window.open = jest.fn(() => {
-			throw 'boom';
-		}) as typeof window.open;
+		(global as typeof globalThis & { fetch: jest.Mock }).fetch = jest
+			.fn()
+			.mockRejectedValue('boom');
 
 		await userEvent.type(textarea, 'Hello from Content Creator OS');
 		await userEvent.click(publishButton);
