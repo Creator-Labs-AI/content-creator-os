@@ -39,8 +39,12 @@ export default function PublishPage() {
 			return;
 		}
 
+		const encodedContent = encodeURIComponent(trimmedContent);
+		const shareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodedContent}`;
 		const popup =
-			typeof window !== 'undefined' ? window.open('about:blank', '_blank') : null;
+			typeof window !== 'undefined'
+				? window.open(shareUrl, '_blank', 'noopener,noreferrer')
+				: null;
 
 		setIsSubmitting(true);
 		setStatus(statusMessages.launching);
@@ -65,11 +69,7 @@ export default function PublishPage() {
 			setStatus(statusMessages.opening);
 			setStatus(statusMessages.creating);
 
-			const encodedContent = encodeURIComponent(trimmedContent);
-			const shareUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${encodedContent}`;
-
 			if (typeof window !== 'undefined' && popup) {
-				popup.location.assign(shareUrl);
 				popup.focus();
 			} else if (typeof window !== 'undefined') {
 				const fallbackLink = document.createElement('a');

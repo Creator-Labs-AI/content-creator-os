@@ -21,8 +21,9 @@ export default function RecentActivityCard({ items }: RecentActivityCardProps) {
 		const status =
 			entry.status ?? (entry.preview ? 'Sent to LinkedIn' : 'LinkedIn Session');
 		const rawDate = entry.date ?? entry.initiatedAt ?? '';
+		const isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(rawDate);
 		const date =
-			rawDate && !Number.isNaN(Date.parse(rawDate))
+			rawDate && !Number.isNaN(Date.parse(rawDate)) && !isDateOnly
 				? new Date(rawDate).toLocaleString(undefined, {
 						dateStyle: 'medium',
 						timeStyle: 'short',
