@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@next/eslint-plugin-next": "16.2.9",
+    "@vercel/blob": "^0.27.3",
     "next": "16.2.9",
     "npm": "11.17.0",
     "react": "19.2.7",

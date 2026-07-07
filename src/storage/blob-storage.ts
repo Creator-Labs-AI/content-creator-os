@@ -1,50 +1,53 @@
+import { list, put } from '@vercel/blob';
 import type { PublishHistory } from '@/types/publish-history';
 import type { StorageProvider } from './storage-provider';
 
-/**
- * BlobStorage reads a JSON file from a Vercel Blob URL provided via
- * environment variable `VERCEL_BLOB_URL`.
- * If no URL is configured, readHistory returns an empty history.
- */
+const BLOB_FILE_NAME = 'publish-history.json';
+
 export class BlobStorage implements StorageProvider {
-	private blobUrl?: string;
-
-	constructor() {
-		this.blobUrl = process.env.VERCEL_BLOB_URL;
-	}
-
 	async readHistory(): Promise<PublishHistory> {
-		if (!this.blobUrl) {
-			// Fail gracefully if not configured
-			return { history: [] };
-		}
-
 		try {
-			const res = await fetch(this.blobUrl);
-			if (!res.ok) return { history: [] };
-			const parsed = (await res.json()) as PublishHistory;
-			return parsed;
-		} catch {
+			const blob = await this.findBlob();
+			if (!blob) {
+				return { history: [] };
+			}
+
+			const response = await fetch(blob.url);
+			if (!response.ok) {
+				console.warn(
+					`Unable to read publish history from blob storage (${response.status}).`,
+				);
+				return { history: [] };
+			}
+
+			const payload = (await response.json()) as Partial<PublishHistory>;
+			return this.normalizeHistory(payload);
+		} catch (error) {
+			console.error('Unable to read publish history from blob storage.', error);
 			return { history: [] };
 		}
 	}
 
 	async writeHistory(history: PublishHistory): Promise<void> {
-		if (!this.blobUrl) {
-			throw new Error('Blob storage is not configured.');
+		try {
+			const payload = this.normalizeHistory(history);
+			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
+				access: 'public',
+			});
+		} catch (error) {
+			console.error('Unable to write publish history to blob storage.', error);
 		}
+	}
 
-		const res = await fetch(this.blobUrl, {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(history),
-		});
+	private async findBlob() {
+		const result = await list({ prefix: BLOB_FILE_NAME });
+		return result.blobs.find((blob) => blob.pathname === BLOB_FILE_NAME);
+	}
 
-		if (!res.ok) {
-			throw new Error(`Unable to write publish history (${res.status}).`);
-		}
+	private normalizeHistory(payload?: Partial<PublishHistory>): PublishHistory {
+		return {
+			history: Array.isArray(payload?.history) ? payload.history : [],
+		};
 	}
 }
 
