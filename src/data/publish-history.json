@@ -1,3 +1,193 @@
 {
-  "history": []
+  "history": [
+    {
+      "id": "4632fbc9-6393-4172-a38e-b86a72b991de",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:17:56.869Z",
+      "initiatedAt": "2026-07-07T19:17:56.869Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "19bb77a0-c56d-4d95-874c-22695067b958",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:18:02.554Z",
+      "initiatedAt": "2026-07-07T19:18:02.554Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "29969d64-6adc-4d21-8df3-a41e269dd01a",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:18:09.999Z",
+      "initiatedAt": "2026-07-07T19:18:09.999Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "50a56d18-5f78-4913-90f9-3099b3865ed9",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:18:12.715Z",
+      "initiatedAt": "2026-07-07T19:18:12.715Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "fab4b799-c788-4ecc-9ca9-1fe86037a477",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:18:16.285Z",
+      "initiatedAt": "2026-07-07T19:18:16.285Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "f49ee3f8-1130-4cf6-a213-ec2ee0796fc4",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:18:23.341Z",
+      "initiatedAt": "2026-07-07T19:18:23.341Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "a30cb5aa-321c-4a2f-82c5-3450231fd42f",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:18:30.866Z",
+      "initiatedAt": "2026-07-07T19:18:30.866Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "35397522-bde0-47f3-8391-eab986681eb2",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:23:50.005Z",
+      "initiatedAt": "2026-07-07T19:23:50.005Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "3b6706c2-922c-4ca9-9b52-52f7fc58a387",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:23:59.914Z",
+      "initiatedAt": "2026-07-07T19:23:59.914Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "3ffc2bc2-dc0f-482e-b17e-03bb45caf5f8",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:24:05.147Z",
+      "initiatedAt": "2026-07-07T19:24:05.147Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "76815923-d4c6-4704-8f46-79e68baa6bb7",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:24:08.008Z",
+      "initiatedAt": "2026-07-07T19:24:08.008Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "16ca232b-97ba-4b1c-b07e-1086a78af64f",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:24:12.463Z",
+      "initiatedAt": "2026-07-07T19:24:12.463Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "1f8d7b2b-ba63-4184-afd3-8a3e60387fca",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:24:19.675Z",
+      "initiatedAt": "2026-07-07T19:24:19.675Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "ab2c7e7c-2173-413c-abea-a349dd2c3697",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:24:24.406Z",
+      "initiatedAt": "2026-07-07T19:24:24.406Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "1e13f421-f454-44d7-875f-094f4ee8f461",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:24:54.031Z",
+      "initiatedAt": "2026-07-07T19:24:54.031Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "979d6491-0263-47ca-9a87-bdb86a4f8884",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:25:03.565Z",
+      "initiatedAt": "2026-07-07T19:25:03.565Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "b105ec9a-a35a-4bac-98c4-8b5a6c984edb",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:25:10.849Z",
+      "initiatedAt": "2026-07-07T19:25:10.849Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "c4aed19e-287b-49f6-aef1-57020de68ef3",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:25:13.087Z",
+      "initiatedAt": "2026-07-07T19:25:13.087Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "553d766b-89e5-4efc-81ba-e068c8c4a2a4",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:25:19.308Z",
+      "initiatedAt": "2026-07-07T19:25:19.308Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "4e01d277-5838-49be-80d7-6d858502e480",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:25:22.993Z",
+      "initiatedAt": "2026-07-07T19:25:22.993Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    },
+    {
+      "id": "1beda1ab-2485-4d6d-b513-8adb6ad6edd6",
+      "platform": "linkedin",
+      "status": "initiated",
+      "date": "2026-07-07T19:25:28.718Z",
+      "initiatedAt": "2026-07-07T19:25:28.718Z",
+      "preview": "Hello from Content Creator OS",
+      "characterCount": 29
+    }
+  ]
 }

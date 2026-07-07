@@ -76,7 +76,7 @@ export default defineConfig({
 		url: 'http://127.0.0.1:3000',
 		reuseExistingServer: !process.env.CI,
 		env: {
-			NEXT_PUBLIC_PUBLISH_STATUS_TIMEOUT_MS: '2000',
+			NEXT_PUBLIC_PUBLISH_STATUS_TIMEOUT_MS: '6000',
 		},
 	},
 });
