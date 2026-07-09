@@ -1,17 +1,18 @@
 import { BlobStorage } from '@/storage/blob-storage';
-import { list, put } from '@vercel/blob';
+import { put, get } from '@vercel/blob';
 
 jest.mock('@vercel/blob', () => ({
-	list: jest.fn(),
 	put: jest.fn(),
+	get: jest.fn(),
 }));
 
-const mockedList = list as jest.MockedFunction<typeof list>;
 const mockedPut = put as jest.MockedFunction<typeof put>;
+const mockedGet = get as jest.MockedFunction<typeof get>;
 
 describe('BlobStorage', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
+		process.env.BLOB_READ_WRITE_TOKEN = 'test-token';
 		jest.spyOn(console, 'warn').mockImplementation(() => undefined);
 		jest.spyOn(console, 'error').mockImplementation(() => undefined);
 	});
@@ -20,77 +21,126 @@ describe('BlobStorage', () => {
 		jest.restoreAllMocks();
 	});
 
-	it('returns empty history when no publish-history.json blob exists', async () => {
-		mockedList.mockResolvedValue({ blobs: [], cursor: undefined } as never);
+	it('returns empty history when the blob does not exist', async () => {
+		mockedGet.mockResolvedValue(null);
 
 		const storage = new BlobStorage();
 		await expect(storage.readHistory()).resolves.toEqual({ history: [] });
-		expect(mockedList).toHaveBeenCalledWith(
-			expect.objectContaining({ prefix: 'publish-history.json' }),
+		expect(mockedGet).toHaveBeenCalledWith(
+			expect.stringContaining('publish-history.json'),
+			expect.objectContaining({ access: 'private', token: 'test-token' }),
 		);
 	});
 
-	it('returns parsed history when the blob exists and fetch succeeds', async () => {
+	it('returns empty history when the token is missing', async () => {
+		delete process.env.BLOB_READ_WRITE_TOKEN;
+
+		const storage = new BlobStorage();
+		await expect(storage.readHistory()).resolves.toEqual({ history: [] });
+		expect(mockedGet).not.toHaveBeenCalled();
+	});
+
+	it('returns parsed history when the blob exists and get succeeds', async () => {
 		const payload = {
 			history: [{ id: 'event-1', status: 'initiated', date: '2024-01-01' }],
 		};
-		mockedList.mockResolvedValue({
-			blobs: [
-				{
-					pathname: 'publish-history.json',
-					url: 'https://blob.example/publish-history.json',
-				},
-			],
-			cursor: undefined,
+		mockedGet.mockResolvedValue({
+			stream: JSON.stringify(payload),
+			blob: {
+				url: 'https://blob.example/publish-history.json',
+				downloadUrl: 'https://blob.example/publish-history.json?download=1',
+				pathname: 'publish-history.json',
+				size: 123,
+				uploadedAt: new Date(),
+				contentType: 'application/json',
+				contentDisposition: '',
+				cacheControl: '',
+				tetag: 'etag',
+			},
 		} as never);
-		global.fetch = jest.fn().mockResolvedValue({
-			ok: true,
-			json: async () => payload,
-		}) as unknown as typeof fetch;
 
 		const storage = new BlobStorage();
 		await expect(storage.readHistory()).resolves.toEqual(payload);
+		expect(mockedGet).toHaveBeenCalledWith(
+			expect.stringContaining('publish-history.json'),
+			expect.objectContaining({ access: 'private', token: 'test-token' }),
+		);
 	});
 
-	it('returns empty history when the blob fetch response is not ok', async () => {
-		mockedList.mockResolvedValue({
-			blobs: [
-				{
-					pathname: 'publish-history.json',
-					url: 'https://blob.example/publish-history.json',
-				},
-			],
-			cursor: undefined,
+	it('returns empty history when get returns null', async () => {
+		mockedGet.mockResolvedValue(null);
+
+		const storage = new BlobStorage();
+		await expect(storage.readHistory()).resolves.toEqual({ history: [] });
+	});
+
+	it('returns empty history when the stream is missing', async () => {
+		mockedGet.mockResolvedValue({
+			stream: null,
+			blob: {
+				url: 'https://blob.example/publish-history.json',
+				downloadUrl: 'https://blob.example/publish-history.json?download=1',
+				pathname: 'publish-history.json',
+				size: 123,
+				uploadedAt: new Date(),
+				contentType: 'application/json',
+				contentDisposition: '',
+				cacheControl: '',
+				tetag: 'etag',
+			},
 		} as never);
-		global.fetch = jest
-			.fn()
-			.mockResolvedValue({ ok: false, status: 404 }) as unknown as typeof fetch;
 
 		const storage = new BlobStorage();
 		await expect(storage.readHistory()).resolves.toEqual({ history: [] });
 	});
 
 	it('returns empty history when the blob payload is malformed', async () => {
-		mockedList.mockResolvedValue({
-			blobs: [
-				{
-					pathname: 'publish-history.json',
-					url: 'https://blob.example/publish-history.json',
-				},
-			],
-			cursor: undefined,
+		mockedGet.mockResolvedValue({
+			stream: JSON.stringify({ notHistory: [] }),
+			blob: {
+				url: 'https://blob.example/publish-history.json',
+				downloadUrl: 'https://blob.example/publish-history.json?download=1',
+				pathname: 'publish-history.json',
+				size: 123,
+				uploadedAt: new Date(),
+				contentType: 'application/json',
+				contentDisposition: '',
+				cacheControl: '',
+				tetag: 'etag',
+			},
 		} as never);
-		global.fetch = jest.fn().mockResolvedValue({
-			ok: true,
-			json: async () => ({ notHistory: [] }),
-		}) as unknown as typeof fetch;
 
 		const storage = new BlobStorage();
 		await expect(storage.readHistory()).resolves.toEqual({ history: [] });
 	});
 
-	it('returns empty history when blob lookup throws', async () => {
-		mockedList.mockRejectedValue(new Error('boom'));
+	it('returns parsed history from a body-like stream', async () => {
+		const payload = {
+			history: [{ id: 'event-1', status: 'initiated', date: '2024-01-01' }],
+		};
+		mockedGet.mockResolvedValue({
+			stream: {
+				text: async () => JSON.stringify(payload),
+			},
+			blob: {
+				url: 'https://blob.example/publish-history.json',
+				downloadUrl: 'https://blob.example/publish-history.json?download=1',
+				pathname: 'publish-history.json',
+				size: 123,
+				uploadedAt: new Date(),
+				contentType: 'application/json',
+				contentDisposition: '',
+				cacheControl: '',
+				tetag: 'etag',
+			},
+		} as never);
+
+		const storage = new BlobStorage();
+		await expect(storage.readHistory()).resolves.toEqual(payload);
+	});
+
+	it('returns empty history when get throws', async () => {
+		mockedGet.mockRejectedValue(new Error('boom'));
 
 		const storage = new BlobStorage();
 		await expect(storage.readHistory()).resolves.toEqual({ history: [] });
@@ -112,7 +162,7 @@ describe('BlobStorage', () => {
 		expect(mockedPut).toHaveBeenCalledWith(
 			'publish-history.json',
 			JSON.stringify(payload),
-			expect.objectContaining({ access: 'public' }),
+			expect.objectContaining({ access: 'private' }),
 		);
 	});
 

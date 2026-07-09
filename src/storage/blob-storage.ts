@@ -1,4 +1,4 @@
-import { list, put, get } from '@vercel/blob';
+import { put, get } from '@vercel/blob';
 import type { PublishHistory } from '@/types/publish-history';
 import type { StorageProvider } from './storage-provider';
 
@@ -7,19 +7,41 @@ const BLOB_FILE_NAME = 'publish-history.json';
 export class BlobStorage implements StorageProvider {
 	async readHistory(): Promise<PublishHistory> {
 		try {
-			const blob = await this.findBlob();
-			if (!blob) {
+			const token = process.env.BLOB_READ_WRITE_TOKEN;
+			if (!token) {
+				console.error(
+					'Vercel Blob: No token found. Set BLOB_READ_WRITE_TOKEN environment variable.',
+				);
 				return { history: [] };
 			}
-			console.log(`Found blob for publish history: ${blob.url}`);
-			const token = process.env.BLOB_READ_WRITE_TOKEN;
-			// Prefer SDK `get` for private stores; it returns a stream and metadata.
-			const pathnameOrUrl = blob.pathname ?? blob.url;
-			const getResult = await get(pathnameOrUrl, { access: 'private', token });
-			if (!getResult) return { history: [] };
+
+			const getResult = await get(BLOB_FILE_NAME, {
+				access: 'private',
+				token,
+			});
+
+			if (!getResult) {
+				return { history: [] };
+			}
+
 			const { stream } = getResult;
-			if (!stream) return { history: [] };
-			const text = await new Response(stream as unknown as BodyInit).text();
+			if (!stream) {
+				return { history: [] };
+			}
+
+			const isBodyWithText = (value: unknown): value is { text: () => Promise<string> } =>
+				typeof value === 'object' &&
+				value !== null &&
+				typeof (value as { text?: unknown }).text === 'function';
+
+			const streamCandidate = stream as unknown;
+			const text =
+				typeof streamCandidate === 'string'
+					? streamCandidate
+					: isBodyWithText(streamCandidate)
+						? await streamCandidate.text()
+						: await new Response(streamCandidate as BodyInit).text();
+
 			const payload = (JSON.parse(text) || {}) as Partial<PublishHistory>;
 			return this.normalizeHistory(payload);
 		} catch (error) {
@@ -31,27 +53,12 @@ export class BlobStorage implements StorageProvider {
 	async writeHistory(history: PublishHistory): Promise<void> {
 		try {
 			const payload = this.normalizeHistory(history);
-			console.log(`Writing publish history to blob storage: ${BLOB_FILE_NAME}`);
-			console.log(
-				'environment vsriable BLOB_READ_WRITE_TOKEN: ',
-				process.env.BLOB_READ_WRITE_TOKEN,
-			);
-			console.log(
-				'environment vsriable NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN: ',
-				process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
-			);
 			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
 				access: 'private',
 			});
 		} catch (error) {
 			console.error('Unable to write publish history to blob storage.', error);
 		}
-	}
-
-	private async findBlob() {
-		const token = process.env.BLOB_READ_WRITE_TOKEN;
-		const result = await list({ prefix: BLOB_FILE_NAME, token });
-		return result.blobs.find((blob) => blob.pathname === BLOB_FILE_NAME);
 	}
 
 	private normalizeHistory(payload?: Partial<PublishHistory>): PublishHistory {

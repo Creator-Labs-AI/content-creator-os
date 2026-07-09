@@ -70,13 +70,21 @@ export default function PublishPage() {
 			setStatus(statusMessages.creating);
 
 			if (typeof window !== 'undefined' && popup) {
-				popup.focus();
+				try {
+					popup.focus();
+				} catch {
+					// Ignore focus failures; the publish flow should still continue.
+				}
 			} else if (typeof window !== 'undefined') {
 				const fallbackLink = document.createElement('a');
 				fallbackLink.href = shareUrl;
 				fallbackLink.target = '_blank';
 				fallbackLink.rel = 'noopener,noreferrer';
-				fallbackLink.click();
+				try {
+					fallbackLink.click();
+				} catch {
+					// Ignore fallback click failures; still proceed to waiting state.
+				}
 			}
 
 			setStatus(statusMessages.waiting);

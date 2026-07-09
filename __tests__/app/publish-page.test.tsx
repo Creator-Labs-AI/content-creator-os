@@ -91,4 +91,40 @@ describe('Publish page', () => {
 			expect(screen.getByText(/waiting for human approval/i)).toBeInTheDocument();
 		});
 	});
+
+	it('continues publishing even if popup.focus() throws', async () => {
+		render(<PublishPage />);
+
+		const textarea = screen.getByLabelText(/linkedin post/i);
+		const publishButton = screen.getByRole('button', { name: /publish to linkedin/i });
+
+		(global as typeof globalThis & { fetch: jest.Mock }).fetch = jest
+			.fn()
+			.mockResolvedValue({
+				ok: true,
+				json: async () => ({ success: true }),
+			});
+
+		Object.defineProperty(window, 'open', {
+			value: jest.fn().mockImplementation(
+				() =>
+					({
+						focus: () => {
+							throw new Error('focus failed');
+						},
+						closed: false,
+						location: { href: '' },
+						postMessage: () => {},
+					}) as unknown as Window,
+			),
+			writable: true,
+		});
+
+		await userEvent.type(textarea, 'Hello from Content Creator OS');
+		await userEvent.click(publishButton);
+
+		await waitFor(() => {
+			expect(screen.getByText(/waiting for human approval/i)).toBeInTheDocument();
+		});
+	});
 });

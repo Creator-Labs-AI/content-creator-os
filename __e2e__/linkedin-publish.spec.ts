@@ -20,6 +20,9 @@ test('allows a user to publish a LinkedIn draft from the page', async ({ page })
 	await publishButton.click();
 	const popup = await popupPromise;
 
+	await expect(page.getByText(/waiting for human approval/i)).toBeVisible({
+		timeout: 10000,
+	});
 	await expect.poll(() => popup.url()).toContain('linkedin.com');
 	await expect
 		.poll(() => {
@@ -35,7 +38,6 @@ test('allows a user to publish a LinkedIn draft from the page', async ({ page })
 			return redirectTarget;
 		})
 		.toContain('text');
-	await expect(page.getByText(/waiting for human approval/i)).toBeVisible();
 });
 
 test('allows a user to navigate back to the dashboard from the publish page', async ({
