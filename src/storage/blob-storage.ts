@@ -39,7 +39,7 @@ export class BlobStorage implements StorageProvider {
 			}
 			const { put } = await import('@vercel/blob');
 			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
-				access: 'private',
+				access: 'public',
 				token,
 			});
 		} catch (error) {
