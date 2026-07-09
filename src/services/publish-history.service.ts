@@ -9,7 +9,6 @@ export class PublishHistoryService {
 	}
 
 	async addHistoryEvent(content: string): Promise<void> {
-		const existing = await this.getHistory();
 		const preview = this.buildPreview(content);
 		const initiatedAt = new Date().toISOString();
 		const event = {
@@ -22,9 +21,7 @@ export class PublishHistoryService {
 			characterCount: content.length,
 		};
 
-		await this.storageProvider.writeHistory({
-			history: [...existing.history, event],
-		});
+		await this.storageProvider.appendHistory({ history: [event] });
 	}
 
 	private buildPreview(content: string): string {

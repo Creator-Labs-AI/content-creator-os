@@ -26,6 +26,14 @@ export class LocalStorage implements StorageProvider {
 		await fs.mkdir(path.dirname(this.filePath), { recursive: true });
 		await fs.writeFile(this.filePath, JSON.stringify(history, null, 2));
 	}
+
+	async appendHistory(history: PublishHistory): Promise<void> {
+		const existing = await this.readHistory();
+		const merged = {
+			history: [...existing.history, ...history.history],
+		};
+		await this.writeHistory(merged);
+	}
 }
 
 export default LocalStorage;

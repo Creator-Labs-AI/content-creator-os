@@ -52,13 +52,30 @@ export class BlobStorage implements StorageProvider {
 
 	async writeHistory(history: PublishHistory): Promise<void> {
 		try {
+			const token = process.env.BLOB_READ_WRITE_TOKEN;
+			if (!token) {
+				console.error(
+					'Vercel Blob: No token found. Set BLOB_READ_WRITE_TOKEN environment variable.',
+				);
+				return;
+			}
+
 			const payload = this.normalizeHistory(history);
 			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
 				access: 'private',
+				token,
 			});
 		} catch (error) {
 			console.error('Unable to write publish history to blob storage.', error);
 		}
+	}
+
+	async appendHistory(history: PublishHistory): Promise<void> {
+		const existing = await this.readHistory();
+		const merged = {
+			history: [...existing.history, ...this.normalizeHistory(history).history],
+		};
+		await this.writeHistory(merged);
 	}
 
 	private normalizeHistory(payload?: Partial<PublishHistory>): PublishHistory {
