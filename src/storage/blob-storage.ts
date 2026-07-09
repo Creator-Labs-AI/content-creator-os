@@ -1,3 +1,4 @@
+import { list, put } from '@vercel/blob';
 import type { PublishHistory } from '@/types/publish-history';
 import type { StorageProvider } from './storage-provider';
 
@@ -10,6 +11,16 @@ export class BlobStorage implements StorageProvider {
 			if (!blob) {
 				return { history: [] };
 			}
+			console.log(`Found blob for publish history: ${blob.url}`);
+			console.log(`Fetching publish history from blob storage: ${blob.url}`);
+			console.log(
+				'environment vsriable BLOB_READ_WRITE_TOKEN: ',
+				process.env.BLOB_READ_WRITE_TOKEN,
+			);
+			console.log(
+				'environment vsriable NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN: ',
+				process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+			);
 			const response = await fetch(blob.url);
 			if (!response.ok) {
 				console.warn(
@@ -30,17 +41,16 @@ export class BlobStorage implements StorageProvider {
 		try {
 			const payload = this.normalizeHistory(history);
 			console.log(`Writing publish history to blob storage: ${BLOB_FILE_NAME}`);
-			const token = process.env.BLOB_READ_WRITE_TOKEN;
-			if (!token) {
-				console.error(
-					'Vercel Blob: No token found. Set BLOB_READ_WRITE_TOKEN environment variable.',
-				);
-				return;
-			}
-			const { put } = await import('@vercel/blob');
+			console.log(
+				'environment vsriable BLOB_READ_WRITE_TOKEN: ',
+				process.env.BLOB_READ_WRITE_TOKEN,
+			);
+			console.log(
+				'environment vsriable NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN: ',
+				process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+			);
 			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
-				access: 'public',
-				token,
+				access: 'private',
 			});
 		} catch (error) {
 			console.error('Unable to write publish history to blob storage.', error);
@@ -48,16 +58,7 @@ export class BlobStorage implements StorageProvider {
 	}
 
 	private async findBlob() {
-		const token = process.env.BLOB_READ_WRITE_TOKEN;
-		if (!token) {
-			console.error(
-				'Vercel Blob: No token found. Either configure the `BLOB_READ_WRITE_TOKEN` environment variable, or pass a `token` option to your calls.',
-			);
-			return undefined;
-		}
-
-		const { list } = await import('@vercel/blob');
-		const result = await list({ prefix: BLOB_FILE_NAME, token });
+		const result = await list({ prefix: BLOB_FILE_NAME });
 		return result.blobs.find((blob) => blob.pathname === BLOB_FILE_NAME);
 	}
 

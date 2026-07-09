@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@next/eslint-plugin-next": "16.2.9",
-    "@vercel/blob": "^0.27.3",
+    "@vercel/blob": "2.6.1",
     "next": "16.2.9",
     "npm": "11.17.0",
     "react": "19.2.7",
@@ -69,7 +69,10 @@
     "typescript": "6.0.3"
   },
   "overrides": {
-    "picomatch": "4.0.4"
+    "picomatch": "4.0.4",
+    "eslint-plugin-import": {
+      "eslint": "^10.0.0"
+    }
   },
   "engines": {
     "node": ">=20"
