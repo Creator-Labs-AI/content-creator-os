@@ -11,7 +11,16 @@ export class BlobStorage implements StorageProvider {
 			if (!blob) {
 				return { history: [] };
 			}
-
+			console.log(`Found blob for publish history: ${blob.url}`);
+			console.log(`Fetching publish history from blob storage: ${blob.url}`);
+			console.log(
+				'environment vsriable BLOB_READ_WRITE_TOKEN: ',
+				process.env.BLOB_READ_WRITE_TOKEN,
+			);
+			console.log(
+				'environment vsriable NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN: ',
+				process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+			);
 			const response = await fetch(blob.url);
 			if (!response.ok) {
 				console.warn(
@@ -31,6 +40,15 @@ export class BlobStorage implements StorageProvider {
 	async writeHistory(history: PublishHistory): Promise<void> {
 		try {
 			const payload = this.normalizeHistory(history);
+			console.log(`Writing publish history to blob storage: ${BLOB_FILE_NAME}`);
+			console.log(
+				'environment vsriable BLOB_READ_WRITE_TOKEN: ',
+				process.env.BLOB_READ_WRITE_TOKEN,
+			);
+			console.log(
+				'environment vsriable NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN: ',
+				process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
+			);
 			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
 				access: 'public',
 			});
