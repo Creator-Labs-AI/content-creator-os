@@ -158,7 +158,7 @@ jobs:
 
             **${recommendation}**
 
-            ### Decision Reason
+            ### Decision Rationale
 
             ${decisionReason}
 
