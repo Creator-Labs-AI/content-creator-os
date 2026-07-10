@@ -1,13 +1,6 @@
 name: CCO Dependency Policy
 
 on:
-  workflow_dispatch:
-    inputs:
-      pull_request_number:
-        description: 'Pull request number to apply dependency policy to'
-        required: true
-        type: number
-
   pull_request_target:
     types:
       - opened
@@ -20,10 +13,20 @@ permissions:
 
 jobs:
   dependency-policy:
-    if: github.actor == 'dependabot[bot]'
     runs-on: ubuntu-24.04
 
     steps:
+      - name: Debug
+        run: |
+          echo "Actor: ${{ github.actor }}"
+          echo "PR Author: ${{ github.event.pull_request.user.login }}"
+
+      - name: Exit if not Dependabot
+        if: github.event.pull_request.user.login != 'dependabot[bot]'
+        run: |
+          echo "Not a Dependabot PR"
+          exit 0
+
       - name: Check existing policy labels
         id: check-labels
         uses: actions/github-script@v7
