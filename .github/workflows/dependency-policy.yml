@@ -103,6 +103,7 @@ jobs:
             let recommendation = "Review";
             let label = "";
             let readableType = updateType;
+            let decisionReason = "";
 
             switch (updateType) {
 
@@ -110,18 +111,32 @@ jobs:
                 recommendation = "🔴 Review Required";
                 label = "review-required";
                 readableType = "Major Version Update";
+                decisionReason = `
+            - Major version upgrade.
+            - Review release notes for breaking changes.
+            - Verify compatibility with Content Creator OS before merging.
+            `;
                 break;
 
               case "version-update:semver-minor":
                 recommendation = "🟡 Review If Needed";
                 label = "review-if-needed";
                 readableType = "Minor Version Update";
+                decisionReason = `
+            - Minor version upgrade.
+            - Review if it introduces a feature required by Content Creator OS.
+            - Otherwise, the upgrade may be deferred.
+            `;
                 break;
 
               case "version-update:semver-patch":
                 recommendation = "🟢 Defer";
                 label = "defer";
                 readableType = "Patch Version Update";
+                decisionReason = `
+            - Patch version update.
+            - Defer unless it addresses an End-of-Life version, a High/Critical security issue, a required feature, or a dependency compatibility requirement.
+            `;
                 break;
             }
 
@@ -142,6 +157,10 @@ jobs:
             ## Recommendation
 
             **${recommendation}**
+
+            ### Decision Reason
+
+            ${decisionReason}
 
             ---
 
