@@ -1,0 +1,133 @@
+name: CCO Dependency Policy
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - reopened
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  dependency-policy:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check existing policy labels
+        id: check-labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const labels = context.payload.pull_request.labels.map(l => l.name);
+
+            const decisionLabels = [
+              "review-required",
+              "review-if-needed",
+              "defer",
+              "security"
+            ];
+
+            const alreadyProcessed =
+              labels.some(label => decisionLabels.includes(label));
+
+            core.setOutput("processed", alreadyProcessed);
+
+      - name: Stop if policy already applied
+        if: steps.check-labels.outputs.processed == 'true'
+        run: |
+          echo "Dependency policy already applied."
+          exit 0
+
+      - name: Fetch Dependabot Metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+
+      - name: Add dependencies label
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            dependencies
+
+      - name: Label Major Update
+        if: steps.metadata.outputs.update-type == 'version-update:semver-major'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            review-required
+
+      - name: Label Minor Update
+        if: steps.metadata.outputs.update-type == 'version-update:semver-minor'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            review-if-needed
+
+      - name: Label Patch Update
+        if: steps.metadata.outputs.update-type == 'version-update:semver-patch'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            defer
+
+      - name: Add CCO Dependency Policy Comment
+        uses: actions/github-script@v7
+        env:
+          UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
+          script: |
+            const updateType = process.env.UPDATE_TYPE;
+
+            let recommendation = "Review";
+            let label = "";
+
+            switch (updateType) {
+              case "version-update:semver-major":
+                recommendation = "Review Required";
+                label = "review-required";
+                break;
+
+              case "version-update:semver-minor":
+                recommendation = "Review If Needed";
+                label = "review-if-needed";
+                break;
+
+              case "version-update:semver-patch":
+                recommendation = "Defer";
+                label = "defer";
+                break;
+            }
+
+            const body = `## CCO Dependency Review
+
+            **Update Type:** ${updateType}
+
+            **Recommendation:** **${recommendation}**
+
+            ### CCO Dependency Policy
+
+            | Rule | Status |
+            |------|--------|
+            | 1. End-of-Life | Manual Review |
+            | 2. Security Fix | Manual Review |
+            | 3. Required Feature | Manual Review |
+            | 4. Major Version | ${updateType === "version-update:semver-major" ? "Yes" : "No"} |
+            | 5. Dependency Requirement | Manual Review |
+
+            **Applied Label:** \`${label}\`
+
+            Please review this PR against the Content Creator OS Dependency Policy before merging.
+            `;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body
+            });
