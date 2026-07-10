@@ -89,36 +89,61 @@ jobs:
         uses: actions/github-script@v7
         env:
           UPDATE_TYPE: ${{ steps.metadata.outputs.update-type }}
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+          PREVIOUS_VERSION: ${{ steps.metadata.outputs.previous-version }}
+          NEW_VERSION: ${{ steps.metadata.outputs.new-version }}
         with:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
           script: |
             const updateType = process.env.UPDATE_TYPE;
+            const dependencyNames = process.env.DEPENDENCY_NAMES;
+            const previousVersion = process.env.PREVIOUS_VERSION;
+            const newVersion = process.env.NEW_VERSION;
 
             let recommendation = "Review";
             let label = "";
+            let readableType = updateType;
 
             switch (updateType) {
+
               case "version-update:semver-major":
-                recommendation = "Review Required";
+                recommendation = "🔴 Review Required";
                 label = "review-required";
+                readableType = "Major Version Update";
                 break;
 
               case "version-update:semver-minor":
-                recommendation = "Review If Needed";
+                recommendation = "🟡 Review If Needed";
                 label = "review-if-needed";
+                readableType = "Minor Version Update";
                 break;
 
               case "version-update:semver-patch":
-                recommendation = "Defer";
+                recommendation = "🟢 Defer";
                 label = "defer";
+                readableType = "Patch Version Update";
                 break;
             }
 
             const body = `## CCO Dependency Review
 
-            **Update Type:** ${updateType}
+            ### Dependency
 
-            **Recommendation:** **${recommendation}**
+            **Package:** ${dependencyNames}
+
+            **Current Version:** ${previousVersion}
+
+            **Target Version:** ${newVersion}
+
+            **Update Type:** ${readableType}
+
+            ---
+
+            ## Recommendation
+
+            **${recommendation}**
+
+            ---
 
             ### CCO Dependency Policy
 
@@ -132,7 +157,9 @@ jobs:
 
             **Applied Label:** \`${label}\`
 
-            Please review this PR against the Content Creator OS Dependency Policy before merging.
+            Please review this PR against the Content Creator OS Dependency Policy.
+
+            📄 Policy Document: \`docs/development/DEPENDENCY_POLICY.md\`
             `;
 
             await github.rest.issues.createComment({
