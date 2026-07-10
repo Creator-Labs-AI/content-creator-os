@@ -64,6 +64,7 @@ export class BlobStorage implements StorageProvider {
 			await put(BLOB_FILE_NAME, JSON.stringify(payload), {
 				access: 'private',
 				token,
+				allowOverwrite: true,
 			});
 		} catch (error) {
 			console.error('Unable to write publish history to blob storage.', error);
