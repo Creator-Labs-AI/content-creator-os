@@ -1,36 +1,171 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Content Creator OS
 
-## Getting Started
+An AI-powered platform for generating, managing, and publishing professional content across multiple platforms.
 
-First, run the development server:
+---
+
+## Vision
+
+Content Creator OS is being built as a personal AI-powered content operating system.
+
+The long-term goal is to transform ideas into high-quality content with AI assistance while keeping the creator in control of the publishing workflow.
+
+---
+
+## Current Status
+
+**Current Phase:** Phase 2 – AI-Assisted Content Generation
+
+**Latest Release:** v0.1.1-alpha
+
+---
+
+## Implemented Features
+
+### Capability 1 – LinkedIn Publishing
+
+- Create LinkedIn posts
+- Publish using LinkedIn Share URL
+- Human-in-the-loop publishing workflow
+- Desktop publishing support
+
+---
+
+### Dashboard
+
+- Publish statistics
+- Recent activity
+- Publish history
+- Pagination
+
+---
+
+### Storage
+
+- Local JSON storage
+- Vercel Blob storage
+- Storage provider abstraction
+
+---
+
+### Engineering
+
+- GitHub Actions
+- Automated Dependabot triage
+- Dependency governance
+- Semantic Versioning
+- Release Management
+
+---
+
+## Technology Stack
+
+### Frontend
+
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS
+
+### Testing
+
+- Jest
+- Playwright
+
+### Storage
+
+- Local JSON
+- Vercel Blob
+
+### Deployment
+
+- Vercel
+
+---
+
+## Roadmap
+
+### ✅ Phase 0
+
+- Project Foundation
+
+### ✅ Phase 1
+
+- LinkedIn Publishing
+- Dashboard
+- Storage
+- Engineering Governance
+
+### 🚧 Phase 2
+
+- AI Content Generation
+- Draft Management
+- LLM Metrics
+- Observability
+
+---
+
+## Documentation
+
+Project documentation is maintained separately.
+
+- Architecture
+- Roadmap
+- ADRs
+- Milestones
+- Retrospectives
+- Development Playbooks
+
+Refer to the **docs** repository.
+
+---
+
+## Development
 
 ```bash
+npm install
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+http://localhost:3000
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Testing
 
-To learn more about Next.js, take a look at the following resources:
+Unit Tests
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm test
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+End-to-End Tests
 
-## Deploy on Vercel
+```bash
+npm run test:e2e
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Coverage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run test:coverage
+```
+
+---
+
+## Releases
+
+| Version      | Description                                      |
+| ------------ | ------------------------------------------------ |
+| v0.0.1       | Project Foundation                               |
+| v0.1.0-alpha | LinkedIn Publishing                              |
+| v0.1.1-alpha | Engineering Productivity & Dependency Governance |
+
+---
+
+## License
+
+MIT
